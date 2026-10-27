@@ -9,6 +9,7 @@ export default function UserList() {
             .then(response => response.json())
             .then(data => {
                 setUsers(Object.values(data))
+                console.log(users);
             })
             .catch(error => console.error('Error fetching users:', error));
 
@@ -136,7 +137,7 @@ export default function UserList() {
                 </thead>
                 <tbody>
                     {users.map(user => (
-                        <UserListItem key={user.id} user={user} />
+                        <UserListItem key={user._id} {...user} />
                     ))}
                 </tbody>
             </table>
