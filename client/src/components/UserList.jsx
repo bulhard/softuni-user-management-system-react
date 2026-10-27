@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import UserListItem from "./UserListItem";
+import UserDetails from "./UserDetails";
 
-export default function UserList({ onEditUser, onDeleteUser }) {
-    const [users, setUsers] = useState([]);
+export default function UserList({ users, onEditUser, onDeleteUser }) {
 
-    useEffect(() => {
-        fetch('http://localhost:3030/jsonstore/users')
-            .then(response => response.json())
-            .then(data => {
-                setUsers(Object.values(data))
-            })
-            .catch(error => console.error('Error fetching users:', error));
+    const [showUserDetails, setShowUserDetails] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState(null);
 
+    const detailsClickHandler = (userId) => {
+        setShowUserDetails(true);
+        setSelectedUserId(userId);
+    }
 
-    }, []);
-
-    
+    const closeDetailsHandler = () => {
+        setShowUserDetails(false);
+        setSelectedUserId(null);
+    };
 
     return (
 
@@ -138,11 +138,25 @@ export default function UserList({ onEditUser, onDeleteUser }) {
                 </thead>
                 <tbody>
                     {users.map(user => (
-                        <UserListItem key={user._id} {...user} onEditUser={onEditUser} onDeleteUser={onDeleteUser} />
+                        <UserListItem
+                            {...user}    
+                            key={user._id} 
+                            onDetailsClick={detailsClickHandler}
+                            onEditUser={onEditUser}
+                            onDeleteUser={onDeleteUser}
+                        />
                     ))}
                 </tbody>
             </table>
 
-        </div>
+            {/* User Detail component  */}
+            {showUserDetails && (
+                <UserDetails 
+                    userId={selectedUserId} 
+                    onClose={closeDetailsHandler}
+                />
+        )}
+
+        </div> 
     );
 } 
