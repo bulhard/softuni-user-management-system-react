@@ -9,12 +9,13 @@ export default function UserList() {
             .then(response => response.json())
             .then(data => {
                 setUsers(Object.values(data))
-                console.log(users);
             })
             .catch(error => console.error('Error fetching users:', error));
 
 
     }, []);
+
+    
 
     return (
 
@@ -142,7 +143,6 @@ export default function UserList() {
                 </tbody>
             </table>
 
-            <button className="btn-add btn">Add new user</button>
         </div>
     );
 } 
