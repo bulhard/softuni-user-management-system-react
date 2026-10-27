@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import CreateUser from "./CreateUser";
+import AddEditUserModal from "./AddEditUserModal";
 import Pagination from "./Pagination";
 import SearchForm from "./SearchForm";
 import UserList from "./UserList";
@@ -14,6 +14,18 @@ export default function Main() {
     }
 
     const closeUserModalHanndler = () => {
+        setDisplayAddEditUser(false);
+    }
+
+    const addUserSubmitHandler = (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+        const userData = Object.fromEntries(formData);
+
+        console.log('User Data:', userData);
+
         setDisplayAddEditUser(false);
     }
 
@@ -74,7 +86,12 @@ export default function Main() {
             </div> */}
 
             {/* Edit user component  */}
-            {displayAddEditUser && <CreateUser onClose={closeUserModalHanndler} />}
+            {displayAddEditUser &&
+                <AddEditUserModal
+                    onClose={closeUserModalHanndler}
+                    onAddUser={addUserSubmitHandler}
+                />
+            }
 
 
             {/* Delete user component  */}

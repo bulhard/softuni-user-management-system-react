@@ -1,4 +1,7 @@
-export default function CreateUser({ onClose }) {
+export default function AddEditUserModal({ 
+    onClose ,
+    onAddUser,
+}) {
     return (
         <div className="overlay">
             <div className="backdrop" onClick={onClose}></div>
@@ -15,7 +18,7 @@ export default function CreateUser({ onClose }) {
                             </svg>
                         </button>
                     </header>
-                    <form>
+                    <form onSubmit={onAddUser}>
                         <div className="form-row">
                             <div className="form-group">
                                 <label htmlFor="firstName">First name</label>

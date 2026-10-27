@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import UserListItem from "./UserListItem";
 
-export default function UserList() {
+export default function UserList({ onEditUser, onDeleteUser }) {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
@@ -138,7 +138,7 @@ export default function UserList() {
                 </thead>
                 <tbody>
                     {users.map(user => (
-                        <UserListItem key={user._id} {...user} />
+                        <UserListItem key={user._id} {...user} onEditUser={onEditUser} onDeleteUser={onDeleteUser} />
                     ))}
                 </tbody>
             </table>
