@@ -1,7 +1,22 @@
+import { useEffect, useState } from "react";
 import UserListItem from "./UserListItem";
 
-export default function Table() {
+export default function UserList() {
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:3030/jsonstore/users')
+            .then(response => response.json())
+            .then(data => {
+                setUsers(Object.values(data))
+            })
+            .catch(error => console.error('Error fetching users:', error));
+
+
+    }, []);
+
     return (
+
         <div className="table-wrapper">
             {/* <div className="loading-shade">
                 <div className="spinner"></div>
@@ -120,11 +135,13 @@ export default function Table() {
                     </tr>
                 </thead>
                 <tbody>
-                    <UserListItem />
+                    {users.map(user => (
+                        <UserListItem key={user.id} user={user} />
+                    ))}
                 </tbody>
             </table>
 
             <button className="btn-add btn">Add new user</button>
         </div>
     );
-}
+} 
