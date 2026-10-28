@@ -1,20 +1,32 @@
 import { useState } from "react";
 import UserListItem from "./UserListItem";
 import UserDetails from "./UserDetails";
+import UserDeleteModal from "./UserDeleteModal";
 
-export default function UserList({ users, onEditUser, onDeleteUser }) {
-
+export default function UserList({ 
+    users ,
+    forceUserRefresh
+}) {
+ 
     const [showUserDetails, setShowUserDetails] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const detailsClickHandler = (userId) => {
         setShowUserDetails(true);
         setSelectedUserId(userId);
     }
 
-    const closeDetailsHandler = () => {
+    const closeModalHandler = () => {
         setShowUserDetails(false);
+        setShowDeleteModal(false);
         setSelectedUserId(null);
+    };
+
+    const openDeleteModalHandler = (userId) => {
+        setShowDeleteModal(true);
+        setSelectedUserId(userId);
     };
 
     return (
@@ -142,8 +154,7 @@ export default function UserList({ users, onEditUser, onDeleteUser }) {
                             {...user}    
                             key={user._id} 
                             onDetailsClick={detailsClickHandler}
-                            onEditUser={onEditUser}
-                            onDeleteUser={onDeleteUser}
+                            onDeleteClick={openDeleteModalHandler}
                         />
                     ))}
                 </tbody>
@@ -153,9 +164,18 @@ export default function UserList({ users, onEditUser, onDeleteUser }) {
             {showUserDetails && (
                 <UserDetails 
                     userId={selectedUserId} 
-                    onClose={closeDetailsHandler}
+                    onClose={closeModalHandler}
                 />
-        )}
+            )}
+
+            {/* User Delete Modal component  */}
+            {showDeleteModal && (
+                <UserDeleteModal 
+                    userId={selectedUserId}
+                    onClose={closeModalHandler}
+                    forceUserRefresh={forceUserRefresh}
+                />
+            )}
 
         </div> 
     );

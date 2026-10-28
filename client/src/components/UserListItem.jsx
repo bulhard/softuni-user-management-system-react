@@ -8,8 +8,7 @@ export default function UserListItem({
     phoneNumber,
     imageUrl,
     createdAt,
-    onEditUser,
-    onDeleteUser,
+        onDeleteClick,
     onDetailsClick
 }) {
 
@@ -27,7 +26,7 @@ export default function UserListItem({
             <td>{fromIsoDate(createdAt)}</td>
 
             <td className="actions">
-                <button className="btn edit-btn" title="Edit" onClick={() => onEditUser && onEditUser(user)} aria-label={`Edit ${firstName} ${lastName}`}>
+                <button className="btn edit-btn" title="Edit"  aria-label={`Edit ${firstName} ${lastName}`}> 
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="pen-to-square"
                         className="svg-inline--fa fa-pen-to-square" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 532 512">
@@ -36,7 +35,7 @@ export default function UserListItem({
                         </path>
                     </svg>
                 </button>
-                <button className="btn delete-btn" title="Delete" onClick={() => onDeleteUser && onDeleteUser(_id)} aria-label={`Delete ${firstName} ${lastName}`}>
+                <button className="btn delete-btn" title="Delete" onClick={() => onDeleteClick && onDeleteClick(_id)} aria-label={`Delete ${firstName} ${lastName}`}>
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash"
                         className="svg-inline--fa fa-trash" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 498 512">
                         <path fill="currentColor"
