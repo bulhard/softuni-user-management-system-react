@@ -1,8 +1,7 @@
 export default function UserDeleteModal(
     {
         userId,
-        onClose,
-        forceUserRefresh
+        onClose
     }
 ) {
 
@@ -14,7 +13,6 @@ export default function UserDeleteModal(
                 if (!response.ok) {
                     throw new Error('Failed to delete user');
                 }
-                forceUserRefresh();
                 onClose();
             })
             .catch(error => {

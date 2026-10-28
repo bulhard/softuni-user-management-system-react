@@ -2,6 +2,7 @@ import { useState } from "react";
 import UserListItem from "./UserListItem";
 import UserDetails from "./UserDetails";
 import UserDeleteModal from "./UserDeleteModal";
+import UserSaveModal from "./UserSaveModal";
 
 export default function UserList({ 
     users ,
@@ -9,9 +10,10 @@ export default function UserList({
 }) {
  
     const [showUserDetails, setShowUserDetails] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState(null);
-
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showUserEditModal, setShowUserEditModal] = useState(false);
+
+    const [selectedUserId, setSelectedUserId] = useState(null);
 
     const detailsClickHandler = (userId) => {
         setShowUserDetails(true);
@@ -21,12 +23,54 @@ export default function UserList({
     const closeModalHandler = () => {
         setShowUserDetails(false);
         setShowDeleteModal(false);
+        setShowUserEditModal(false);
+
+        forceUserRefresh();
+
         setSelectedUserId(null);
     };
 
     const openDeleteModalHandler = (userId) => {
         setShowDeleteModal(true);
         setSelectedUserId(userId);
+    };
+
+    const openEditModalHandler = (userId) => {
+        setShowUserEditModal(true);
+        setSelectedUserId(userId);
+    }
+
+    const editUserHandler = (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        
+        const { country, city, street, streetNumber, ...userData } = Object.fromEntries(formData);
+        userData.address = {
+            country,
+            city,
+            street,
+            streetNumber
+        };
+        userData.updatedAt = new Date().toISOString();
+        
+        fetch(`http://localhost:3030/jsonstore/users/${selectedUserId}`, {
+            method: 'PATCH',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(userData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to update user: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(() => {
+                closeModalHandler();
+            })
+            .catch(error => {
+                console.log('Error updating user:', error);
+            });
     };
 
     return (
@@ -155,6 +199,7 @@ export default function UserList({
                             key={user._id} 
                             onDetailsClick={detailsClickHandler}
                             onDeleteClick={openDeleteModalHandler}
+                            onEditClick={openEditModalHandler}
                         />
                     ))}
                 </tbody>
@@ -173,10 +218,20 @@ export default function UserList({
                 <UserDeleteModal 
                     userId={selectedUserId}
                     onClose={closeModalHandler}
-                    forceUserRefresh={forceUserRefresh}
                 />
             )}
 
+            {/* User Edit Modal component  */}
+            {showUserEditModal && (
+                <UserSaveModal
+                    editMode={true}
+                    userId={selectedUserId}
+                    onClose={closeModalHandler}
+                    onSubmit={editUserHandler}
+                />
+            )}
         </div> 
     );
-} 
+}
+
+       

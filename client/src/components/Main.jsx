@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import AddEditUserModal from "./AddEditUserModal";
+import UserSaveModal from "./UserSaveModal";
 import Pagination from "./Pagination";
 import SearchForm from "./SearchForm";
 import UserList from "./UserList";
@@ -39,6 +39,7 @@ export default function Main() {
     }
 
     const addUserSubmitHandler = (event) => {
+        
         event.preventDefault();
 
         const formData = new FormData(event.target);
@@ -70,7 +71,7 @@ export default function Main() {
                 forceUserRefresh();
             })
             .catch(error => {
-                console.error('Error adding user:', error);
+                console.log('Error adding user:', error);
             });
     }
 
@@ -89,9 +90,9 @@ export default function Main() {
 
             {/* Edit user component  */}
             {displayAddEditUser &&
-                <AddEditUserModal
+                <UserSaveModal
                     onClose={closeUserModalHanndler}
-                    onAddUser={addUserSubmitHandler}
+                    onSubmit={addUserSubmitHandler}
                 />
             }
         </main>
