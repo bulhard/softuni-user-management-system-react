@@ -1,9 +1,28 @@
+import { useEffect, useState } from "react";
+import { fromIsoDate } from "../utils/datetimeUtils";
+
 export default function UserDetails(
     {
         userId,
         onClose
     }
 ) {
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        fetch(`http://localhost:3030/jsonstore/users/${userId}`, { cache: 'no-store' })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch user details: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => setUser(data))
+            .catch(error => {
+                console.error('Error fetching user details:', error);
+            });
+    }, [userId]);
+
     return (
         <div className="overlay">
             <div className="backdrop" onClick={onClose} ></div>
@@ -29,17 +48,17 @@ export default function UserDetails(
                             <p>User Id: <strong>{userId}</strong></p>
                             <p>
                                 Full Name:
-                                <strong> Peter Johnson </strong>
+                                <strong> {user?.firstName || 'N/A'} {user?.lastName || 'N/A'} </strong>
                             </p>
-                            <p>Email: <strong>peter@abv.bg</strong></p>
-                            <p>Phone Number: <strong>0812345678</strong></p>
+                            <p>Email: <strong>{user?.email || 'N/A'}</strong></p>
+                            <p>Phone Number: <strong>{user?.phoneNumber || 'N/A'}</strong></p>
                             <p>
                                 Address:
-                                <strong> Bulgaria, Sofia, Aleksandar Malinov 78 </strong>
+                                <strong> {user?.address?.country || 'N/A'}, {user?.address?.city || 'N/A'}, {user?.address?.street || 'N/A'} </strong>
                             </p>
 
-                            <p>Created on: <strong>Wednesday, June 28, 2022</strong></p>
-                            <p>Modified on: <strong>Thursday, June 29, 2022</strong></p>
+                            <p>Created on: <strong>{fromIsoDate(user?.createdAt || 'N/A')}</strong></p>
+                            <p>Modified on: <strong>{fromIsoDate(user?.updatedAt || 'N/A')}</strong></p>
                         </div>
                     </div>
                 </div>
