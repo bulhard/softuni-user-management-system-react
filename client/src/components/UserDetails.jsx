@@ -41,8 +41,7 @@ export default function UserDetails(
                     </header>
                     <div className="content">
                         <div className="image-container">
-                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png" alt=""
-                                className="image" />
+                            <img src={user?.imageUrl} alt="" className="image" />
                         </div>
                         <div className="user-details">
                             <p>User Id: <strong>{userId}</strong></p>
